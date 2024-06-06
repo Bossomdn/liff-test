@@ -4,15 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        #loading {
+            font-size: 20px;
+            color: #888;
+        }
+        #lineProfile {
+            display: none;
+        }
+        #lineImage {
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        #lineName {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        #lineUID {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        #lineMessage {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #logout {
+            background-color: #f44336;
+            margin-top: 20px;
+        }
+        #logout:hover {
+            background-color: #e53935;
+        }
+    </style>
 </head>
 <body>
-    <div>
+    <div class="container">
         <span id="loading">Loading</span>
 
-        <div id="lineProfile" style="display: none;">
-            <img id="lineImage" width="100px" src="" >
+        <div id="lineProfile">
+            <img id="lineImage" width="100px" src="">
             <div id="lineName">Hello Name</div>
-            <div id="lineUID">UID: Your UID</div>
 
             <!-- <div>
                 <input id="lineMessage" type="text">
@@ -20,43 +85,44 @@
             </div> -->
             
         </div>
-
-        <button id="logout" onclick="logout()">logout</button>
+        <div>
+            <button id="logout" onclick="logout()">Logout</button>
+        </div>
+        
     </div>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js" integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-
-        let userId = ' '
+        let userId = ' ';
         const main = async() => {
-            await liff.init({ liffId: '2005541875-DgA1Lob1' })
+            await liff.init({ liffId: '2005541875-DgA1Lob1' });
             if(!liff.isLoggedIn()) {
-                liff.login()
-                return false
+                liff.login();
+                return false;
             }
 
-            const profile = await liff.getProfile()
+            const profile = await liff.getProfile();
 
-            loading.style.display='none'
+            loading.style.display='none';
 
             //update profile
-            lineImage.src = profile.pictureUrl
-            lineName.textContent = `Hello ${profile.displayName}`
-            lineUID.textContent = `UID: ${profile.userId}`
-            lineProfile.style.display='block'
+            lineImage.src = profile.pictureUrl;
+            lineName.textContent = `Hello ${profile.displayName}`;
+            //lineUID.textContent = `UID: ${profile.userId}`;
+            lineProfile.style.display='block';
 
-            userId = profile.userId
+            userId = profile.userId;
         }
 
         const logout = async() => {
-            liff.logout()
-            window.location.reload()
+            liff.logout();
+            window.location.reload();
         }
 
         const sendMessage = async() => {
             try {
                 if(!lineMessage.value) {
-                    throw new Error('message not found')
+                    throw new Error('message not found');
                 }
 
                 const response = await axios.post(
@@ -65,15 +131,15 @@
                         userId,
                         message: lineMessage.value
                     }
-                )
+                );
                 
-                console.log('response', response.data)
+                console.log('response', response.data);
             } catch (error) {
-                console.log('error', error)
+                console.log('error', error);
             }
         }
 
-        main()
+        main();
     </script>
 </body>
 </html>
